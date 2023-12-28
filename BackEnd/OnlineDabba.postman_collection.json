@@ -1,0 +1,577 @@
+{
+	"info": {
+		"_postman_id": "7e24685a-4560-401f-995b-5634ed26d4db",
+		"name": "OnlineDabba",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31842814"
+	},
+	"item": [
+		{
+			"name": "User API",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "signup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Hitansh\",\r\n    \"email\":\"Hitanshgrawal@gmail.com\",\r\n    \"password\":\"12345678\",\r\n    \"confirmpassword\":\"12345678\",\r\n    \"phonenumber\":\"6265638985\",\r\n    \"role\":\"adman\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/user/signup",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"hitanshagrawal@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/user/login",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/user/logout",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "forgetpassword",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"hitanshagrawal4@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/user/forgetpassword",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"forgetpassword"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "resetpassword",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password\":\"12345678\",\r\n    \"confirmpassword\":\"12345678\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/resetpassword/694f3f0a4f752b54b9628823a1f55a7dc31ac638a7fb4ece57cf3ca90ba104500c9334964775b8f69af166cec6d424b81c57e6d55dc8a0338ecee5161870c66e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"resetpassword",
+										"694f3f0a4f752b54b9628823a1f55a7dc31ac638a7fb4ece57cf3ca90ba104500c9334964775b8f69af166cec6d424b81c57e6d55dc8a0338ecee5161870c66e"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "profilepage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateprofile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Hitansh Agrawal\",\r\n    \"role\":\"seller\",\r\n    \"email\":\"hitanshagrawal@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/user/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteprofile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getallusers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mess API",
+			"item": [
+				{
+					"name": "private",
+					"item": [
+						{
+							"name": "createMess",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"HariOmMess\",\r\n    \"phonenumber\":\"9425105191\",\r\n    \"address\":\"kitiyani mandsaur\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/mess/",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updatemess",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"RadheShyamMess\",\r\n    \"phonenumber\":\"1234567891\",\r\n    \"address\":\"NaiAbadi mandsaur\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/mess/658177217da3da35b7b39ff6",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"658177217da3da35b7b39ff6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deletemess",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/658177217da3da35b7b39ff6",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"658177217da3da35b7b39ff6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fetchMineMess",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/fetchmine",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"fetchmine"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "public",
+					"item": [
+						{
+							"name": "getMess",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/view/658177217da3da35b7b39ff6",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"view",
+										"658177217da3da35b7b39ff6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "fetchallmess",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/fetchall",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"fetchall"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Plans API",
+			"item": [
+				{
+					"name": "createplan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"bahar wala khana\",\r\n    \"price\":320,\r\n    \"duration_in_weeks\":2,\r\n    \"description\":\"3 sabzi, 1 daal, 2 starter, 10 roti, 1 saalad, 2 papad, 2 raita and 2 sweet\",\r\n    \"messid\":\"658177217da3da35b7b39ff6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/mess/plans/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mess",
+								"plans",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateplan",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"bahaar wala khaana\",\r\n    \"price\":\"299\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/mess/plans/658177217da3da35b7b39ff6&6582a3d352262160be6ca6c0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mess",
+								"plans",
+								"658177217da3da35b7b39ff6&6582a3d352262160be6ca6c0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteplan",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/mess/plans/658177217da3da35b7b39ff6&6582a3d352262160be6ca6c0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"mess",
+								"plans",
+								"658177217da3da35b7b39ff6&6582a3d352262160be6ca6c0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscription API",
+			"item": [
+				{
+					"name": "view",
+					"item": [
+						{
+							"name": "viewsubs_byuserlevel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/user/viewsubs",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"user",
+										"viewsubs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "viewsubs_bymesslevel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/viewsubs/658177217da3da35b7b39ff6",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"viewsubs",
+										"658177217da3da35b7b39ff6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "viewsubs_byplanlevel",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/mess/plan/viewsubs/658177217da3da35b7b39ff6&658293104e83ab8260df5001",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"mess",
+										"plan",
+										"viewsubs",
+										"658177217da3da35b7b39ff6&658293104e83ab8260df5001"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "createsubscription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/subs/plan/6582a3d352262160be6ca6c0",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"subs",
+								"plan",
+								"6582a3d352262160be6ca6c0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletesubscription",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/subs/6582cea9c742cf9bb6f3d12b",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"subs",
+								"6582cea9c742cf9bb6f3d12b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

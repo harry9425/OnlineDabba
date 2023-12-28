@@ -1,0 +1,59 @@
+const express = require('express');
+const MessModel = require('../Models/MessModel');
+const PlanModel = require('../Models/PlanModel');
+const UserModel = require('../Models/UserModel');
+const SubsModel = require('../Models/SubsModel');
+let jwt = require('jsonwebtoken');
+let { JWT_KEY } = require('../utils');
+const mongoose = require('mongoose');
+
+module.exports.Subscreate = function create(req, res) {
+    PlanModel.findOne({ _id: req.params.pid }).then((plan) => {
+        let data = {};
+        data['userid'] = req.userdata.id;
+        data['messid'] = plan.messid;
+        data['planid'] = plan.id;
+        SubsModel.create(data)
+            .then((d) => {
+                PlanModel.updateOne({ _id: data.planid }, { $push: { subscribed: d.id } }).then(() => {
+                    MessModel.updateOne({ _id: data.messid }, { $push: { subscribed: d.id } }).then(() => {
+                        UserModel.updateOne({ _id: data.userid }, { $push: { subscribed: d.id } }).then(() => {
+                            res.status(200);
+                            res.json({ "message": "Subscription Activated!!!", "data": d });
+                        });
+                    });
+                });
+            })
+            .catch((err) => {
+                res.status(500);
+                res.json({ "message": String(err) });
+            });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) });
+    });
+};
+
+module.exports.Subsdelete = function create(req, res) {
+    if(req.userdata.subscribed.includes(req.params.sid)){
+    SubsModel.findOneAndDelete({ _id:req.params.sid})
+        .then((data) => {
+            PlanModel.updateOne({ _id: data.planid }, { $pull: { subscribed: data.id } }).then(() => {
+                MessModel.updateOne({ _id: data.messid }, { $pull: { subscribed: data.id } }).then(() => {
+                    UserModel.updateOne({ _id: data.userid }, { $pull: { subscribed: data.id } }).then(() => {
+                        res.status(200);
+                        res.json({ "message": "Subscription DeActivated!!!", "data": data});
+                    });
+                });
+            });
+        })
+        .catch((err) => {
+            res.status(500);
+            res.json({ "message": String(err) });
+        });
+    }
+    else{
+        res.status(400);
+        res.json({ "message": "You can't access this subscription. (User mismatch!!)"});
+    }
+};

@@ -1,0 +1,41 @@
+const mongoose=require('mongoose');
+
+let PlanSchema=mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    price:{
+        type:Number,
+        required:true,
+        min:10,
+    },
+    planratings:{
+        type:Number,
+        default:0,
+        max:5,
+        min:0
+    },
+    planreviewid:{
+        type:[String],
+        default:[]
+    },
+    duration_in_weeks:{
+        type:Number,
+        required:true,
+        min:1,
+        max:52
+    },
+    description:{
+        type:String,
+        required:true
+    },
+    subscribed:[{ type: mongoose.Schema.Types.ObjectId, ref: 'subs' }],
+    messid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'mess',
+        required:true
+    }
+});
+
+module.exports=mongoose.model('plans',PlanSchema);

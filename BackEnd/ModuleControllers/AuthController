@@ -1,0 +1,96 @@
+const express = require('express');
+const UserModel = require('../Models/UserModel');
+let jwt = require('jsonwebtoken');
+let { JWT_KEY} = require('../utils');
+let {sendmail} = require('../mailutils');
+const { token } = require('morgan');
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoiNjU4MDVhMzI5NjM3MjMzOGVkOTJiMTI2IiwiaWF0IjoxNzAzNzQ3MzE2fQ.nskvPNgjBQehlyWSBfXH8it9XEa5ahm2A0VmybwA5WE
+
+module.exports.Usersignup = function (req, res) {
+    let data = req.body;
+    UserModel.create(data).then((data) => {
+        sendmail('signup',data);
+        res.status(202);
+        res.json({ "message": "Users Created SuccessFully!!", "data": data });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) })
+    });
+}
+
+module.exports.Userlogin = async function (req, res) {
+    let data = req.body;
+    if (data.email) {
+        let user = await UserModel.findOne({ email: data.email });
+        if (user) {
+            if (data.password == user.password) {
+                let token = jwt.sign({ payload: user.id }, JWT_KEY);
+                //res.cookie("login", token, { httpOnly: true });//, maxAge: 3600000 });
+                res.json({"message":"Login Successfull","token":token});
+                //res.json({ "message": "Successfully Logged In", "data": user });
+            }
+            else {
+                res.json({ "message": "Wrong Credentials" });
+            }
+        }
+        else {
+            res.json({ "message": "User Not Exists Please signUp first!!" });
+        }
+    }
+    else {
+        res.status(500);
+        res.json({ "message": "Error Found" });
+    }
+
+}
+
+module.exports.Userlogout= async function(req,res){
+    res.cookie('login'," ",{maxAge:1});
+    res.redirect('/');
+}
+
+module.exports.Forgetpass = async function (req, res) {
+    let email = req.body.email;
+    if (email) {
+        let user = await UserModel.findOne({ email: email });
+        if (user) {
+            let resettoken = user.createResetToken();
+            user.confirmpassword="%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@";
+            await user.save();
+            user.reset_token_link = `${req.protocol}://${req.get('host')}/resetpassword/${resettoken}`;
+            sendmail('resetpassword',user);
+            res.json({ "message": "Mail sent with link to reset your credentials on your mail id." });
+        }
+        else {
+            res.json({ "message": "User don't exists, please signup.." });
+        }
+    }
+    else {
+        res.status(400);
+        res.json({ "message": "Email field can't be empty" });
+    }
+}
+
+module.exports.Resetpass = async function (req, res) {
+    let { password, confirmpassword } = req.body;
+    let resettoken = req.params.token;
+    let user = await UserModel.findOne({ resettoken: resettoken });
+    if (user) {
+        console.log(user);
+        await user.resetpasswordHandler(password, confirmpassword);
+        user.save().then((data)=>{
+            res.json({ "message": "Password reset successfully...","data":data});
+        }).catch((err)=>{
+            res.status(500);
+            res.json({ "message": "Something went Wrong, Can't reset password.." });
+        });
+    }
+    else {
+        res.status(500);
+        res.json({ "message": "Something went Wrong..." });
+    }
+}
+
+
+

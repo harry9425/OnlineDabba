@@ -1,0 +1,39 @@
+const mongoose=require('mongoose');
+
+let MessSchema=mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    avgratings:{
+        type:Number,
+        default:0,
+        max:5,
+        min:0
+    },
+    ownerid:{
+        type:String,
+        required:true,
+    },
+    reviewid:{
+        type:[String],
+        default:[]
+    },
+    plans:[{ type: mongoose.Schema.Types.ObjectId, ref: 'plans' }],
+    address:{
+        type:String,
+        required:true
+    },
+    phonenumber:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    datestarted:{
+        type:Date,
+        default:Date.now()
+    },
+    subscribed:[{ type: mongoose.Schema.Types.ObjectId, ref: 'subs' }],
+});
+
+module.exports=mongoose.model("mess",MessSchema);

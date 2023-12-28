@@ -1,0 +1,25 @@
+const mongoose=require('mongoose');
+
+let SubsSchema=mongoose.Schema({
+    userid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Users',
+        required:true
+    },
+    messid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'mess',
+        required:true
+    },
+    planid:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'plans',
+        required:true
+    },
+    date:{
+        type:Date,
+        default:Date.now()
+    }
+});
+
+module.exports=mongoose.model('subs',SubsSchema);

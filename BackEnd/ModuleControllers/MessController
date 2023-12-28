@@ -1,0 +1,110 @@
+const express = require('express');
+const MessModel = require('../Models/MessModel');
+const UserModel = require('../Models/UserModel');
+let jwt = require('jsonwebtoken');
+let { JWT_KEY } = require('../utils');
+
+
+module.exports.Messcreate = function (req, res) {
+    let data = req.body;
+    data.ownerid = req.id;
+    MessModel.create(data).then((d) => {
+        console.log(d.id + " " + d.ownerid);
+        UserModel.updateOne({ _id: d.ownerid }, { $push: { mess: d.id } }).then((userACK) => {
+            res.status(200);
+            res.json({ "message": "Mess Object Created SuccessFully!!", "data": d, "User ACK": userACK });
+        }).catch((err) => {
+            res.status(400);
+            res.json({ "message": String(err) });
+        });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) })
+    });
+}
+
+module.exports.Messupdate = function (req, res) {
+    let data = req.body;
+    MessModel.updateOne({ _id: req.params.mid }, data).then((d) => {
+        res.status(200);
+        res.json({ "message": "Mess Object Updated SuccessFully!!", "data": d });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) })
+    });
+}
+
+module.exports.Messget = function (req, res) {
+    MessModel.findOne({ _id: req.params.mid }).then((d) => {
+        res.status(200);
+        res.json({ "message": "Mess data fetched SuccessFully!!", "data": d });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) });
+    });
+}
+
+module.exports.Messgetall = function (req, res) {
+    MessModel.find().then((d) => {
+        res.status(200);
+        res.json({ "message": "All messes data fetched SuccessFully!!", "data": d });
+    }).catch((err) => {
+        res.status(400);
+        res.json({ "message": String(err) })
+    });
+}
+
+module.exports.Messdelete = function (req, res) {
+    MessModel.findOneAndDelete({ _id: req.params.mid }).then((d) => {
+        UserModel.updateOne({ _id: d.ownerid }, { $pull:{mess:d.id}})
+            .then((result) => {
+                res.status(200);
+                res.json({ "message": "Mess data deleted SuccessFully!!", "data_deleted": d, "User ACK": result});
+            })
+            .catch((err) => {
+                res.status(400);
+                res.json({ "message": String(err) })
+            });
+    }).catch((err) => {
+        res.status(404);
+        res.json({ "message": String(err) })
+    });
+}
+
+module.exports.MessgetallSpecific = async function (req, res) {
+    try {
+        let owned_messes = req.userdata.mess;
+        const ans = await Promise.all(owned_messes.map(async (messId) => {
+            console.log(messId);
+            const d = await MessModel.findOne({ _id: messId });
+            return d;
+        }));
+
+        res.json({ "message": "Fetched successfully", "data": ans });
+    } catch (error) {
+        res.status(500).json({ "message": "Error fetching data", "error": error.message });
+    }
+}
+
+
+module.exports.Viewsubs = async function (req, res) {
+    try {
+        let data = await MessModel.findById(req.params.mid)
+            .select(['name','avgratings','address','phonenumber','datestarted'])  // Select only 'name' and 'email' from UserModel
+            .populate({
+                path: 'subscribed',
+                populate: [
+                    { path: 'userid', select: ['name','phonenumber','email'] },
+                    { path: 'planid', select: ['name','price','description'] },
+                ],
+
+                select:['planid','userid']
+            });
+        res.send(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+    
+};
+

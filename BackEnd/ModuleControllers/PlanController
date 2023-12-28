@@ -1,0 +1,89 @@
+const express = require('express');
+const MessModel = require('../Models/MessModel');
+const PlanModel = require('../Models/PlanModel');
+let jwt = require('jsonwebtoken');
+let { JWT_KEY } = require('../utils');
+const mongoose = require('mongoose');
+
+module.exports.Plancreate = function create(req, res) {
+    let data = req.body;
+    if (data) {
+        PlanModel.create(data)
+            .then((result) => {
+                MessModel.updateOne({ _id: result.messid }, { $push: { plans: result.id } }).then((ACK) => {
+                    res.status(200);
+                    res.json({ "message": 'Plan Created SuccessFully', "data": result, "MessACK": ACK });
+                }).catch((err) => {
+                    res.status(500);
+                    res.json({ "message": String(err) });
+                });
+            })
+            .catch((err) => {
+                res.status(400);
+                res.json({ "message": String(err) });
+            });
+    } else {
+        res.status(400);
+        res.json({ "message": "Error required value Not found!!!" });
+    }
+};
+
+module.exports.Planupdate = function create(req, res) {
+    let data = req.body;
+    console.log(data);
+    if (data) {
+        PlanModel.updateOne({ _id: req.params.pid }, data)
+            .then((result) => {
+                res.status(200);
+                res.json({ "message": 'Plan updated SuccessFully', "data": result });
+            })
+            .catch((err) => {
+                res.status(400);
+                res.json({ "message": String(err) });
+            });
+    } else {
+        res.status(400);
+        res.json({ "message": "Error required value Not found!!!" });
+    }
+};
+
+module.exports.Plandelete = function create(req, res) {
+    PlanModel.findOneAndDelete({ _id: req.params.pid })
+        .then((result) => {
+            MessModel.updateOne({ _id: result.messid }, { $pull: { plans: result.id } }).then((ACK) => {
+                res.status(200);
+                res.json({ "message": 'Plan deleted SuccessFully', "plandata": result, "MessACK": ACK });
+            }).catch((err) => {
+                res.status(500);
+                res.json({ "message": String(err) });
+            });
+        })
+        .catch((err) => {
+            res.status(400);
+            res.json({ "message": String(err) });
+        });
+};
+
+module.exports.Viewsubs = async function (req, res) {
+    try {
+        let data = await PlanModel.findById(req.params.pid)
+            .select(['name', 'price', 'description', 'planratings', 'duration_in_weeks'])
+            .populate({
+                path: 'messid',
+                select: 'name'  // Select the 'name' field from the Mess model
+            })
+            .populate({
+                path: 'subscribed',
+                populate: [
+                    { path: 'userid', select: ['name', 'phonenumber', 'email'] },
+                ],
+                select: ['userid']
+            });
+
+        res.send(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+

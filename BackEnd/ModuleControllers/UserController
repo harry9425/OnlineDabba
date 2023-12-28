@@ -1,0 +1,72 @@
+const express = require('express');
+const UserModel = require('../Models/UserModel');
+let jwt = require('jsonwebtoken');
+
+let { JWT_KEY } = require('../utils');
+
+
+module.exports.Userprofile = function (req, res) {
+    let data = req.userdata;
+    if (data) {
+        res.json({ "message": "Profile fetched Successfully", "data": data });
+    }
+    else {
+        res.status(400);
+        res.json({ "message": "Can't able to fetch profile.." });
+    }
+}
+
+module.exports.Updateprofile = async function (req, res) {
+    let data = req.body;
+    let user = req.userdata;
+    if (user) {
+        let val = await UserModel.updateOne({ _id: user.id }, data);
+        res.json({ "message": "Profile Updated Successfully", "data": val });
+    }
+    else {
+        res.status(400);
+        res.json({ "message": "Can't able to fetch profile.." });
+    }
+}
+
+module.exports.Deleteprofile = async function (req, res) {
+    let data = await UserModel.deleteOne({ _id: req.userdata.id });
+    if (data) {
+        res.json({ "message": "Profile deleted Successfully", "data": data });
+    }
+    else {
+        res.status(400);
+        res.json({ "message": "Can't able to fetch profile.." });
+    }
+}
+
+module.exports.Getall = async function (req, res) {
+    let data = await UserModel.find();
+    if (data) {
+        res.json({ "message": "Fetched Successfully", "data": data });
+    }
+    else {
+        res.status(500);
+        res.json({ "message": "Can't fetch all users details" });
+    }
+}
+
+
+module.exports.Viewsubs = async function (req, res) {
+    try {
+        let data = await UserModel.findById(req.userdata.id)
+            .select(['name','email'])  // Select only 'name' and 'email' from UserModel
+            .populate({
+                path: 'subscribed',
+                populate: [
+                    { path: 'planid', select: ['name', 'price'] },
+                    { path: 'messid', select: 'name' }  
+                ],
+            });
+        res.send(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+    
+};
